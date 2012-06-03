@@ -74,6 +74,9 @@
 #ifdef BattMonitor
   #include <BatteryMonitorTypes.h>
 #endif
+#ifdef WITH_GOROLOG
+  #include <GoroLogClient.h>
+#endif
 
 //********************************************************
 //********************************************************
@@ -1314,6 +1317,10 @@ void setup() {
      initSlowTelemetry();
   #endif
 
+  #ifdef WITH_GOROLOG
+    initialize_logger();
+  #endif
+
   setupFourthOrder();
   
   previousTime = micros();
@@ -1490,6 +1497,23 @@ void loop () {
       #ifdef SlowTelemetry
         updateSlowTelemetry10Hz();
       #endif
+
+      #ifdef WITH_GOROLOG
+        switch ( (frameCounter / 10 ) % 10 ) {
+          case 0: // ronda 0, el UPTIME
+            send_log_uptime();
+            break;
+          case 1: // intentemos enviar el magneto
+            //send_log_compass();
+            break;
+          case 2:
+            //send_log_gps();
+            break;
+          default:
+            break;
+        };
+      #endif
+
     }
   
     previousTime = currentTime;
