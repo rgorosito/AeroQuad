@@ -65,10 +65,10 @@ struct home_logdata_t {
   float groundAltitude;
 };
 
-struct motors_logdata_t {
-  uint8_t num_motors;
-  int motorCommand[LASTMOTOR];
-};
+//struct motors_logdata_t {
+//  uint8_t num_motors;
+//  int motorCommand[LASTMOTOR];
+//};
 
 // TODO agregar la data de bateria
 
@@ -97,7 +97,7 @@ union binary_log_data_t {
     altitude_logdata_t altitude;
     position_logdata_t position;
     home_logdata_t home;
-    motors_logdata_t motors;
+//    motors_logdata_t motors;
     receiver_logdata_t receiver;
     gps_logdata_t gps;
 };
