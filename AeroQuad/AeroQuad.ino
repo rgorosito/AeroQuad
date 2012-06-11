@@ -384,7 +384,7 @@
 
   // Altitude declaration
   #ifdef AltitudeHoldBaro    
-    #define BMP085
+    #define BMP085 
   #endif
   #ifdef AltitudeHoldRangeFinder
     #define XLMAXSONAR 
@@ -1098,6 +1098,8 @@
 //********************************************************
 #if defined (BMP085)
   #include <BarometricSensor_BMP085.h>
+#elif defined (MS5611)
+ #include <BarometricSensor_MS5611.h>
 #endif
 #if defined (XLMAXSONAR)
   #include <MaxSonarRangeFinder.h>
@@ -1387,9 +1389,6 @@ void loop () {
     // Evaluate are here because we want it to be synchronized with the processFlightControl
     #if defined AltitudeHoldBaro
       measureBaroSum(); 
-      if (frameCounter % THROTTLE_ADJUST_TASK_SPEED == 0) {  //  50 Hz tasks
-        evaluateBaroAltitude();
-      }
     #endif
           
     // Combines external pilot commands and measured sensor data to generate motor commands
@@ -1416,6 +1415,10 @@ void loop () {
 
       // Reads external pilot commands and performs functions based on stick configuration
       readPilotCommands(); 
+      
+      #if defined AltitudeHoldBaro
+        processExtrapolatedBaroAltitude();
+      #endif
       
       #if defined (UseRSSIFaileSafe) 
         readRSSI();
