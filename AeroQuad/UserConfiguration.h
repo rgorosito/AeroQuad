@@ -39,8 +39,8 @@
 
 // Mega processor
 //#define AeroQuadMega_v1     // Arduino Mega with AeroQuad Shield v1.7 and below
-//#define AeroQuadMega_v2     // Arduino Mega with AeroQuad Shield v2.0
-#define AeroQuadMega_v21    // Arduino Mega with AeroQuad Shield v2.1
+#define AeroQuadMega_v2     // Arduino Mega with AeroQuad Shield v2.0
+//#define AeroQuadMega_v21    // Arduino Mega with AeroQuad Shield v2.1
 //#define AeroQuadMega_Wii    // Arduino Mega with Wii Sensors and AeroQuad Shield v2.x
 //#define ArduCopter          // ArduPilot Mega (APM) with Oilpan Sensor Board
 //#define AeroQuadMega_CHR6DM // Clean Arduino Mega with CHR6DM as IMU/heading ref.
@@ -54,12 +54,6 @@
  *********************** Define Flight Configuration ************************
  ****************************************************************************/
 // Use only one of the following definitions
-<<<<<<< HEAD
-#define quadXConfig
-//#define quadPlusConfig
-//#define hexPlusConfig
-//#define hexXConfig      // EXPERIMENTAL: not completely re-tested
-=======
 //For more information please refer to http://aeroquad.com/showwiki.php?title=Flight+Configurations
 
 #define quadXConfig
@@ -67,7 +61,6 @@
 //#define quadPlusConfig
 //#define hexPlusConfig
 //#define hexXConfig      
->>>>>>> development
 //#define triConfig
 //#define quadY4Config
 //#define hexY6Config
@@ -79,7 +72,7 @@
 // MOTOR ADVANCE CONFIG SECTION
 //#define CHANGE_YAW_DIRECTION	// if you want to reverse the yaw correction direction
 
-#define USE_400HZ_ESC			// For ESC that support 400Hz update rate, ESC OR PLATFORM MAY NOT SUPPORT IT
+//#define USE_400HZ_ESC			// For ESC that support 400Hz update rate, ESC OR PLATFORM MAY NOT SUPPORT IT
 
 
 //
@@ -98,25 +91,15 @@
 // For more information on how to activate theese features with your transmitter
 // Please refer to http://aeroquad.com/showwiki.php?title=Using+the+transmitters+sticks+and+switches+to+operate+your+AeroQuad
 // *******************************************************************************************************************************
-<<<<<<< HEAD
-#define HeadingMagHold // Enables Magnetometer, gets automatically selected if CHR6DM is defined
-#define AltitudeHoldBaro // Enables BMP085 Barometer
-//#define AltitudeHoldRangeFinder // Enable altitude hold with range finder, Not displayed on the configurator
-//#define AutoLanding // Enable auto landing on channel AUX3 of the remote, NEED AltitudeHoldBaro AND AltitudeHoldRangeFinder
-
-#define UseGPS // Try to auto-detect the GPS, may have some detection trouble making the connection to the configurator not working
-#define UseGPS_NMEA   // force the use of NMEA GPS
-//#define UseGPS_MTK  // force the use of MTK GPS
-#define UseGPSNavigator // EXPERIMENTAL NEED UseGPS TO BE DEFINED, enable GPS position hold, auto return home when no mission or execute mission
-=======
 #define HeadingMagHold		// Enables Magnetometer, gets automatically selected if CHR6DM is defined
 #define AltitudeHoldBaro		// Enables Barometer
 //#define AltitudeHoldRangeFinder	// Enables Altitude Hold with range finder, not displayed on the configurator (yet)
 //#define AutoLanding			// Enables auto landing on channel AUX3 of the remote, NEEDS AltitudeHoldBaro AND AltitudeHoldRangeFinder to be defined
 
 //#define UseGPS			// Enables GPS, tries to auto-detect the GPS, may have some detection trouble making the connection to the configurator not working
+//#define UseGPS_NMEA   // force the use of NMEA GPS
+//#define UseGPS_MTK  // force the use of MTK GPS
 //#define UseGPSNavigator		// EXPERIMENTAL NEEDS UseGPS TO BE DEFINED, enables GPS Position Hold, auto return to home if no mission or execute mission
->>>>>>> development
 
 //
 // *******************************************************************************************************************************
@@ -143,8 +126,8 @@
 
 // You need to select one of these channel order definitions for PPM receiver
 //#define SKETCH_SERIAL_SUM_PPM SERIAL_SUM_PPM_1	//For Graupner/Spektrum (DEFAULT)
-#define SKETCH_SERIAL_SUM_PPM SERIAL_SUM_PPM_2	//For Robe/Hitec/Futaba
-//#define SKETCH_SERIAL_SUM_PPM SERIAL_SUM_PPM_3	//For some Hitec/Sanwa/Others
+//#define SKETCH_SERIAL_SUM_PPM SERIAL_SUM_PPM_2	//For Robe/Hitec/Futaba
+#define SKETCH_SERIAL_SUM_PPM SERIAL_SUM_PPM_3	//For some Hitec/Sanwa/Others
 
 //#define UseAnalogRSSIReader // Reads RSSI for receiver failsafe, NEEDS A RECEIVER WITH FAILSAVE CONNECTED ON PIN A6 OF THE SHIELD
 //#define UseEzUHFRSSIReader // Reads RSSI and Signal quality on channel 7(RSSI) and 8(Signal Quality) of the EzUHF receiver (Receiver have to be configures this way)
@@ -194,18 +177,6 @@
 // *******************************************************************************************************************************
 // On screen display implementation using MAX7456 chip. See MAX7456.h in libraries for more info and configuration.
 // For more information on how to setup OSD please refer to http://aeroquad.com/showwiki.php?title=On-Screen-Display
-<<<<<<< HEAD
-// *******************************************************************************************************************************
-//#define OSD
-//#define ShowRSSI
-//#define PAL                       // uncomment this to default to PAL video
-//#define AUTODETECT_VIDEO_STANDARD // detect automatically, signal must be present at Arduino powerup!
-//#define CALLSIGN "Aeroquad"         // Show (optional) callsign
-//#define ShowAttitudeIndicator     // Display the attitude indicator calculated by the AHRS
-//#define USUnits                   // Enable for US units (feet,miles,mph)
-
-//#define OSD_SYSTEM_MENU           // Menu system, currently only usable with OSD
-=======
 // *************************************************************.******************************************************************
 //#define OSD
 //#define ShowRSSI                  // This REQUIRES a RSSI reader
@@ -226,7 +197,6 @@
 //#define SERIAL_LCD Serial3
 
 
->>>>>>> development
 
 /****************************************************************************
  ****************************************************************************
@@ -235,3 +205,4 @@
  ****************************************************************************
  ****************************************************************************
  ****************************************************************************/
+
