@@ -55,7 +55,13 @@
  ****************************************************************************/
 // Use only one of the following definitions
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+//For more information please refer to http://aeroquad.com/showwiki.php?title=Flight+Configurations
+
+>>>>>>> development
 #define quadXConfig
+//#define quadXHT_FPVConfig
 //#define quadPlusConfig
 //#define hexPlusConfig
 <<<<<<< HEAD
@@ -103,6 +109,7 @@
 // Please refer to http://aeroquad.com/showwiki.php?title=Using+the+transmitters+sticks+and+switches+to+operate+your+AeroQuad
 // *******************************************************************************************************************************
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define HeadingMagHold // Enables Magnetometer, gets automatically selected if CHR6DM is defined
 #define AltitudeHoldBaro // Enables BMP085 Barometer
 #define AltitudeHoldRangeFinder // Enable altitude hold with range finder, Not displayed on the configurator
@@ -112,6 +119,15 @@
 //#define UseGPS_NMEA   // force the use of NMEA GPS
 //#define UseGPS_MTK  // force the use of MTK GPS
 #define UseGPSNavigator // EXPERIMENTAL NEED UseGPS TO BE DEFINED, enable GPS position hold, auto return home when no mission or execute mission
+=======
+#define HeadingMagHold		// Enables Magnetometer, gets automatically selected if CHR6DM is defined
+#define AltitudeHoldBaro		// Enables Barometer
+//#define AltitudeHoldRangeFinder	// Enables Altitude Hold with range finder, not displayed on the configurator (yet)
+//#define AutoLanding			// Enables auto landing on channel AUX3 of the remote, NEEDS AltitudeHoldBaro AND AltitudeHoldRangeFinder to be defined
+
+//#define UseGPS			// Enables GPS, tries to auto-detect the GPS, may have some detection trouble making the connection to the configurator not working
+//#define UseGPSNavigator		// EXPERIMENTAL NEEDS UseGPS TO BE DEFINED, enables GPS Position Hold, auto return to home if no mission or execute mission
+>>>>>>> development
 =======
 #define HeadingMagHold		// Enables Magnetometer, gets automatically selected if CHR6DM is defined
 #define AltitudeHoldBaro		// Enables Barometer
@@ -199,15 +215,33 @@
 // On screen display implementation using MAX7456 chip. See MAX7456.h in libraries for more info and configuration.
 // For more information on how to setup OSD please refer to http://aeroquad.com/showwiki.php?title=On-Screen-Display
 <<<<<<< HEAD
+<<<<<<< HEAD
 // *******************************************************************************************************************************
 #define OSD
 //#define ShowRSSI
+=======
+// *************************************************************.******************************************************************
+//#define OSD
+//#define ShowRSSI                  // This REQUIRES a RSSI reader
+>>>>>>> development
 //#define PAL                       // uncomment this to default to PAL video
 //#define AUTODETECT_VIDEO_STANDARD // detect automatically, signal must be present at Arduino powerup!
-//#define CALLSIGN "Aeroquad"         // Show (optional) callsign
-#define ShowAttitudeIndicator     // Display the attitude indicator calculated by the AHRS
-//#define USUnits                   // Enable for US units (feet,miles,mph)
+//#define CALLSIGN "Aeroquad"       // Show (optional) callsign
+//#define ShowAttitudeIndicator     // Display the attitude indicator calculated by the AHRS
+//#define USUnits                   // Enable for US units (feet,miles,mph), leave uncommented for metric units (meter,kilometer,km/h)
 
+//#define OSD_SYSTEM_MENU           // Menu system, currently only usable with OSD or SERIAL_LCD
+
+//
+// *******************************************************************************************************************************
+// Support menu on serial enabled LCD display (16x2 characters).  You can change serial port if needed
+// Note: Can NOT be enabled at the same time with OSD
+// For more information please refer to http://aeroquad.com/showwiki.php?title=OnBoardMenu
+// *************************************************************.******************************************************************
+//#define SERIAL_LCD Serial3
+
+
+<<<<<<< HEAD
 <<<<<<< HEAD
 #define OSD_SYSTEM_MENU           // Menu system, currently only usable with OSD
 =======
@@ -235,6 +269,8 @@
 
 >>>>>>> development
 >>>>>>> development-myconfig
+=======
+>>>>>>> development
 
 /****************************************************************************
  ****************************************************************************
