@@ -45,17 +45,13 @@ void readSpecificMag(float *rawMag) {
     rawMag[XAXIS] = readShortI2C();
     rawMag[ZAXIS] = readShortI2C();
     rawMag[YAXIS] = readShortI2C();
-  #elif defined(AutonavShield_5883L)
-    rawMag[XAXIS] =   readShortI2C();
-    rawMag[ZAXIS] =  -readShortI2C();
-    rawMag[YAXIS] =  -readShortI2C();
+  #elif defined (HMC5883L)  // baloo
+    rawMag[YAXIS] =  readShortI2C();
+    rawMag[ZAXIS] = -readShortI2C();
+    rawMag[XAXIS] =  readShortI2C();
   #else 
     #error Define HMC5883L Orientation
   #endif
-  
-//  Serial.print(rawMag[XAXIS]);Serial.print(",");
-//  Serial.print(rawMag[YAXIS]);Serial.print(",");
-//  Serial.println(rawMag[ZAXIS]);
 }
 
 #endif
