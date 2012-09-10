@@ -72,6 +72,7 @@ ISR(TIMER5_CAPT_vect)//interrupt.
 #define SERIAL_SUM_PPM_1         1,2,3,0,4,5,6,7 // PITCH,YAW,THR,ROLL... For Graupner/Spektrum
 #define SERIAL_SUM_PPM_2         0,1,3,2,4,5,6,7 // ROLL,PITCH,THR,YAW... For Robe/Hitec/Futaba
 #define SERIAL_SUM_PPM_3         1,0,3,2,4,5,6,7 // PITCH,ROLL,THR,YAW... For some Hitec/Sanwa/Others
+#define SERIAL_SUM_PPM_4         0,1,3,2,4,5,6,7 // ROLL,PITCH,THR,YAW... For T9X+FrSky
 
 #if defined (SKETCH_SERIAL_SUM_PPM)
   #define SERIAL_SUM_PPM SKETCH_SERIAL_SUM_PPM
