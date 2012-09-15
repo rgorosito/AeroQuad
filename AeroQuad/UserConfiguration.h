@@ -96,10 +96,17 @@
 //#define AltitudeHoldRangeFinder	// Enables Altitude Hold with range finder, not displayed on the configurator (yet)
 //#define AutoLanding			// Enables auto landing on channel AUX3 of the remote, NEEDS AltitudeHoldBaro AND AltitudeHoldRangeFinder to be defined
 
-//#define UseGPS			// Enables GPS, tries to auto-detect the GPS, may have some detection trouble making the connection to the configurator not working
-//#define UseGPS_NMEA   // force the use of NMEA GPS
-//#define UseGPS_MTK  // force the use of MTK GPS
-//#define UseGPSNavigator		// EXPERIMENTAL NEEDS UseGPS TO BE DEFINED, enables GPS Position Hold, auto return to home if no mission or execute mission
+//
+// *******************************************************************************************************************************
+// GPS Options
+// *******************************************************************************************************************************
+#define UseGPS		        // Enables GPS (for mega v2.0/v2.1 & AeroQuad32)
+
+// Device specific settings
+//#define UseGPSMTKBINARY   // Set MTK devices to binary protocol (only DiyDrones MTK1.6 protocol supported)
+
+//#define UseGPSNavigator   // EXPERIMENTAL NEEDS UseGPS TO BE DEFINED, enables GPS Position Hold, auto return to home if no mission or execute mission
+
 
 //
 // *******************************************************************************************************************************
@@ -126,8 +133,8 @@
 
 // You need to select one of these channel order definitions for PPM receiver
 //#define SKETCH_SERIAL_SUM_PPM SERIAL_SUM_PPM_1	//For Graupner/Spektrum (DEFAULT)
-//#define SKETCH_SERIAL_SUM_PPM SERIAL_SUM_PPM_2	//For Robe/Hitec/Futaba
-#define SKETCH_SERIAL_SUM_PPM SERIAL_SUM_PPM_3	//For some Hitec/Sanwa/Others
+#define SKETCH_SERIAL_SUM_PPM SERIAL_SUM_PPM_2	//For Robe/Hitec/Futaba
+//#define SKETCH_SERIAL_SUM_PPM SERIAL_SUM_PPM_3	//For some Hitec/Sanwa/Others
 
 //#define UseAnalogRSSIReader // Reads RSSI for receiver failsafe, NEEDS A RECEIVER WITH FAILSAVE CONNECTED ON PIN A6 OF THE SHIELD
 //#define UseEzUHFRSSIReader // Reads RSSI and Signal quality on channel 7(RSSI) and 8(Signal Quality) of the EzUHF receiver (Receiver have to be configures this way)
@@ -205,4 +212,3 @@
  ****************************************************************************
  ****************************************************************************
  ****************************************************************************/
-
