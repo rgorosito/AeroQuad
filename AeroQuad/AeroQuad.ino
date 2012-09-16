@@ -1140,6 +1140,14 @@
  * Aeroquad
  ******************************************************************/
 void setup() {
+
+#ifdef GORODEBUG
+  pinMode(24,OUTPUT);
+  pinMode(26,OUTPUT);
+  pinMode(27,OUTPUT);
+  pinMode(28,OUTPUT);
+  pinMode(29,OUTPUT);
+#endif
   SERIAL_BEGIN(BAUD);
   pinMode(LED_Green, OUTPUT);
   digitalWrite(LED_Green, LOW);
@@ -1356,6 +1364,52 @@ void process10HzTask1() {
     calculateHeading();
     
   #endif
+
+  #if defined(BattMonitor)
+    measureBatteryVoltage(G_Dt*1000.0);
+  #endif
+
+  // Listen for configuration commands and reports telemetry
+  readSerialCommand();
+  sendSerialTelemetry();
+
+    G_Dt = (currentTime - lowPriorityTenHZpreviousTime2) / 1000000.0;
+    lowPriorityTenHZpreviousTime2 = currentTime;
+
+    #ifdef OSD_SYSTEM_MENU
+      updateOSDMenu();
+    #endif
+
+    #ifdef MAX7456_OSD
+    #ifndef OSD50HZ
+      updateOSD();
+    #endif
+    #endif
+    
+    #if defined(UseGPS) || defined(BattMonitor)
+      processLedStatus();
+    #endif
+    
+    #ifdef SlowTelemetry
+      updateSlowTelemetry10Hz();
+    #endif
+ 
+    #ifdef WITH_GOROLOG
+      switch ( (frameCounter / 10 ) % 10 ) {
+        case 0: // ronda 0, el UPTIME
+          send_log_uptime();
+          break;
+        case 1: // intentemos enviar el magneto
+          //send_log_compass();
+          break;
+        case 2:
+          //send_log_gps();
+          break;
+        default:
+          break;
+        };
+    #endif
+
 }
 
 /*******************************************************************
@@ -1442,39 +1496,71 @@ void loop () {
   // 100Hz task loop
   // ================================================================
   if (deltaTime >= 10000) {
+
+#ifdef GORODEBUG
+    digitalWrite(24,HIGH);
+#endif
     
     frameCounter++;
     
+#ifdef GORODEBUG
+    digitalWrite(26,HIGH);
+#endif
     process100HzTask();
+#ifdef GORODEBUG
+    digitalWrite(26,LOW);
+#endif
 
     // ================================================================
     // 50Hz task loop
     // ================================================================
     if (frameCounter % TASK_50HZ == 0) {  //  50 Hz tasks
+#ifdef GORODEBUG
+      digitalWrite(27,HIGH);
+#endif
       process50HzTask();
+#ifdef GORODEBUG
+      digitalWrite(27,LOW);
+#endif
     }
 
     // ================================================================
     // 10Hz task loop
     // ================================================================
-    if (frameCounter % TASK_10HZ == 0) {  //   10 Hz tasks
+    if (frameCounter % TASK_10HZ == 9) {  //   10 Hz tasks
+#ifdef GORODEBUG
+      digitalWrite(28,HIGH);
+#endif
       process10HzTask1();
+#ifdef GORODEBUG
+      digitalWrite(28,LOW);
+#endif
     }
-    else if ((currentTime - lowPriorityTenHZpreviousTime) > 100000) {
-      process10HzTask2();
-    }
-    else if ((currentTime - lowPriorityTenHZpreviousTime2) > 100000) {
-      process10HzTask3();
-    }
+//    else if ((currentTime - lowPriorityTenHZpreviousTime) > 100000) {
+//      process10HzTask2();
+//    }
+//    else if ((currentTime - lowPriorityTenHZpreviousTime2) > 100000) {
+//      process10HzTask3();
+//    }
     
     // ================================================================
     // 1Hz task loop
     // ================================================================
-    if (frameCounter % TASK_1HZ == 0) {  //   1 Hz tasks
+    if (frameCounter % TASK_1HZ == 97) {  //   1 Hz tasks
+#ifdef GORODEBUG
+      digitalWrite(29,HIGH);
+#endif
       process1HzTask();
+#ifdef GORODEBUG
+      digitalWrite(29,LOW);
+#endif
     }
     
     previousTime = currentTime;
+
+#ifdef GORODEBUG
+    digitalWrite(24,LOW);
+#endif
   }
   
   if (frameCounter >= 100) {
