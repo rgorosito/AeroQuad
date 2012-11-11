@@ -61,6 +61,12 @@ void readSerialPID(unsigned char PIDid) {
   pid->integratedError = 0;
 }
 
+void skipSerialValues(byte number) {
+  for(byte i=0; i<number; i++) {
+    readFloatSerial();
+  }
+}
+
 void readSerialCommand() {
   // Check for serial message
   if (SERIAL_AVAILABLE()) {
@@ -83,7 +89,7 @@ void readSerialCommand() {
     case 'C': // Receive yaw PID
       readSerialPID(ZAXIS_PID_IDX);
       readSerialPID(HEADING_HOLD_PID_IDX);
-      readFloatSerial();
+      headingHoldConfig = readFloatSerial();
       break;
 
     case 'D': // Altitude hold PID
@@ -171,9 +177,7 @@ void readSerialCommand() {
         magBias[ZAXIS]  = readFloatSerial();
         writeEEPROM();
       #else
-        for(int c=0;c<3;c++) {
-          readFloatSerial();
-        }
+        skipSerialValues(3);
       #endif
       break;
 
@@ -184,9 +188,7 @@ void readSerialCommand() {
         batteryMonitorGoingDownTime = readFloatSerial();
         setBatteryCellVoltageThreshold(batteryMonitorAlarmVoltage);
       #else
-        readFloatSerial();
-        readFloatSerial();
-        readFloatSerial();
+        skipSerialValues(3);
       #endif
       break;
 
@@ -197,10 +199,9 @@ void readSerialCommand() {
         waypoint[missionNbPoint].longitude = readIntegerSerial();
         waypoint[missionNbPoint].altitude = readIntegerSerial();
       #else
-        readIntegerSerial();
-        readIntegerSerial();
-        readIntegerSerial();
-        readIntegerSerial();
+        for(byte i = 0; i < 4; i++) {
+          readFloatSerial();
+        }
       #endif
       break;
     case 'P': //  read Camera values
@@ -219,8 +220,7 @@ void readSerialCommand() {
         servoMaxRoll = readFloatSerial();
         servoMaxYaw = readFloatSerial();
       #else
-        for (byte values = 0; values < 13; values++)
-          readFloatSerial();
+        skipSerialValues(13);
       #endif
       break;
 
@@ -229,21 +229,18 @@ void readSerialCommand() {
         maxRangeFinderRange = readFloatSerial();
         minRangeFinderRange = readFloatSerial();
       #else
-        readFloatSerial();
-        readFloatSerial();
+        skipSerialValues(2);
       #endif
       break;
 
     case 'V': // GPS
-      #if defined (UseGPS)
+      #if defined (UseGPSNavigator)
         readSerialPID(GPSROLL_PID_IDX);
         readSerialPID(GPSPITCH_PID_IDX);
         readSerialPID(GPSYAW_PID_IDX);
         writeEEPROM();
       #else
-        for (byte values = 0; values < 6; values++) {
-          readFloatSerial();
-        }
+        skipSerialValues(9);
       #endif
       break;
 
@@ -256,11 +253,11 @@ void readSerialCommand() {
       break;
 
     case '1': // Calibrate ESCS's by setting Throttle high on all channels
-        validateCalibrateCommand(1);
+      validateCalibrateCommand(1);
       break;
 
     case '2': // Calibrate ESC's by setting Throttle low on all channels
-        validateCalibrateCommand(2);
+      validateCalibrateCommand(2);
       break;
 
     case '3': // Test ESC calibration
@@ -278,8 +275,9 @@ void readSerialCommand() {
 
     case '5': // Send individual motor commands (motor, command)
       if (validateCalibrateCommand(5)) {
-        for (byte motor = 0; motor < LASTMOTOR; motor++)
+        for (byte motor = 0; motor < LASTMOTOR; motor++) {
           motorConfiguratorCommand[motor] = (int)readFloatSerial();
+        }
       }
       break;
 
@@ -342,13 +340,20 @@ void PrintPID(unsigned char IDPid)
   PrintValueComma(PID[IDPid].D);
 }
 
+void PrintDummyValues(byte number) {
+  for(byte i=0; i<number; i++) {
+    PrintValueComma(0);
+  }
+}
+
+
 float GetHeading()
 {
   #if defined(HeadingMagHold) || defined(AeroQuadMega_CHR6DM) || defined(APM_OP_CHR6DM)
-	  float heading = trueNorthHeading;
-	  if (heading < 0){
+	float heading = trueNorthHeading;
+	if (heading < 0){
       heading += (2.0 * M_PI);
-	  }
+	}
   	return heading;
   #else
     return(gyroHeading);
@@ -399,9 +404,7 @@ void sendSerialTelemetry() {
       #endif
       PrintPID(ZDAMPENING_PID_IDX);
     #else
-      for(byte i=0; i<10; i++) {
-        PrintValueComma(0);
-      }
+      PrintDummyValues(10);
     #endif
     SERIAL_PRINTLN();
     queryType = 'X';
@@ -418,6 +421,7 @@ void sendSerialTelemetry() {
     for (byte axis = XAXIS; axis < LASTCHANNEL; axis++) {
       PrintValueComma(receiverSmoothFactor[axis]);
     }
+	PrintDummyValues(10 - LASTCHANNEL);
     SERIAL_PRINTLN();
     queryType = 'X';
     break;
@@ -506,12 +510,11 @@ void sendSerialTelemetry() {
     #ifdef BattMonitor
       PrintValueComma(batteryMonitorAlarmVoltage);
       PrintValueComma(batteryMonitorThrottleTarget);
-      SERIAL_PRINTLN(batteryMonitorGoingDownTime);
+      PrintValueComma(batteryMonitorGoingDownTime);
     #else
-      PrintValueComma(0);
-      PrintValueComma(0);
-      SERIAL_PRINTLN(0);
+      PrintDummyValues(3);
     #endif
+    SERIAL_PRINTLN();
     queryType = 'X';
     break;
 
@@ -523,13 +526,10 @@ void sendSerialTelemetry() {
         PrintValueComma(waypoint[index].longitude);
         PrintValueComma(waypoint[index].altitude);
       }
-      SERIAL_PRINTLN();
     #else
-      PrintValueComma(0);
-      PrintValueComma(0);
-      PrintValueComma(0);
-      SERIAL_PRINTLN(0);
+      PrintDummyValues(4);
     #endif
+    SERIAL_PRINTLN();
     queryType = 'X';
     break;
 
@@ -547,13 +547,11 @@ void sendSerialTelemetry() {
       PrintValueComma(servoMinYaw);
       PrintValueComma(servoMaxPitch);
       PrintValueComma(servoMaxRoll);
-      SERIAL_PRINTLN(servoMaxYaw);
+      PrintValueComma(servoMaxYaw);
     #else
-      for (byte index=0; index < 12; index++) {
-        PrintValueComma(0);
-      }
-      SERIAL_PRINTLN(0);
+      PrintDummyValues(13);
     #endif
+    SERIAL_PRINTLN();
     queryType = 'X';
     break;
 
@@ -584,18 +582,16 @@ void sendSerialTelemetry() {
       PrintValueComma(0);
       PrintValueComma(0);
     #endif
-    for (byte channel = XAXIS; channel < LASTCHANNEL; channel++) {
-      PrintValueComma(receiverCommand[channel]);
+
+    for (byte channel = 0; channel < 8; channel++) { // Configurator expects 8 values
+      PrintValueComma((channel < LASTCHANNEL) ? receiverCommand[channel] : 0);
     }
-    for (byte channel = 0; channel < (8 - LASTCHANNEL); channel++) {// max of 8 transmitter channel supported
-      PrintValueComma(0); // zero out unused transmitter channels
-    }
+
     for (byte motor = 0; motor < LASTMOTOR; motor++) {
       PrintValueComma(motorCommand[motor]);
     }
-    for (byte motor = 0; motor < (8 - (LASTMOTOR)); motor++) {// max of 8 motor outputs supported
-      PrintValueComma(0); // zero out unused motor channels
-    }
+    PrintDummyValues(8 - LASTMOTOR); // max of 8 motor outputs supported
+
     #ifdef BattMonitor
       PrintValueComma((float)batteryData[0].voltage/100.0); // voltage internally stored at 10mV:s
     #else
@@ -624,18 +620,34 @@ void sendSerialTelemetry() {
     break;
 
   case 'v': // Send GPS PIDs
-    #if defined (UseGPS)
+    #if defined (UseGPSNavigator)
       PrintPID(GPSROLL_PID_IDX);
       PrintPID(GPSPITCH_PID_IDX);
       PrintPID(GPSYAW_PID_IDX);
-      SERIAL_PRINTLN();
       queryType = 'X';
     #else
-      for (byte values=0; values < 5; values++)
-        PrintValueComma(0);
-      SERIAL_PRINTLN(0);
+      PrintDummyValues(9);
     #endif
+    SERIAL_PRINTLN();
     queryType = 'X';
+    break;
+  case 'y': // send GPS info
+    #if defined (UseGPS)
+      PrintValueComma(gpsData.state);
+      PrintValueComma(gpsData.lat);
+      PrintValueComma(gpsData.lon);
+      PrintValueComma(gpsData.height);
+      PrintValueComma(gpsData.course);
+      PrintValueComma(gpsData.speed);
+      PrintValueComma(gpsData.accuracy);
+      PrintValueComma(gpsData.sats);
+      PrintValueComma(gpsData.fixtime);
+      PrintValueComma(gpsData.sentences);
+      PrintValueComma(gpsData.idlecount);
+    #else
+      PrintDummyValues(11);
+    #endif    
+    SERIAL_PRINTLN();
     break;
 
   case 'x': // Stop sending messages
@@ -817,7 +829,7 @@ void printVehicleState(const char *sensorName, unsigned long state, const char *
 
 void reportVehicleState() {
   // Tell Configurator how many vehicle state values to expect
-  SERIAL_PRINTLN(14);
+  SERIAL_PRINTLN(15);
   SERIAL_PRINT("Software Version: ");
   SERIAL_PRINTLN(SOFTWARE_VERSION, 1);
   SERIAL_PRINT("Board Type: ");
@@ -850,8 +862,9 @@ void reportVehicleState() {
   #elif defined(AeroQuad_Mini)
     SERIAL_PRINTLN("Mini");
   #elif defined(AeroQuadSTM32)
-    SERIAL_PRINTLN("STM32");
+    SERIAL_PRINTLN(STM32_BOARD_TYPE);
   #endif
+
   SERIAL_PRINT("Flight Config: ");
   #if defined(quadPlusConfig)
     SERIAL_PRINTLN("Quad +");
@@ -871,14 +884,16 @@ void reportVehicleState() {
     SERIAL_PRINTLN("Octo X8");
   #elif defined(octoXConfig)
     SERIAL_PRINTLN("Octo X");
-  // *** For next rev, updat OctoPlus config name here and in Configurator
   #elif defined(octoPlusConfig)
-    SERIAL_PRINTLN("Octo X+");
+    SERIAL_PRINTLN("Octo +");
   #endif
+
   SERIAL_PRINT("Receiver Channels: ");
   SERIAL_PRINTLN(LASTCHANNEL);
+
   SERIAL_PRINT("Motors: ");
   SERIAL_PRINTLN(LASTMOTOR);
+
   printVehicleState("Gyroscope", GYRO_DETECTED, "Detected");
   printVehicleState("Accelerometer", ACCEL_DETECTED, "Detected");
   printVehicleState("Barometer", BARO_DETECTED, "Detected");
@@ -888,6 +903,17 @@ void reportVehicleState() {
   printVehicleState("Battery Monitor", BATTMONITOR_ENABLED, "Enabled");
   printVehicleState("Camera Stability", CAMERASTABLE_ENABLED, "Enabled");
   printVehicleState("Range Detection", RANGE_ENABLED, "Enabled");
+#ifdef UseGPS
+  SERIAL_PRINT("GPS: ");
+  SERIAL_PRINT((gpsData.state==GPS_DETECTING)?"Scanning ":"Detected ");
+  if (gpsData.state != GPS_DETECTING) {
+    SERIAL_PRINT(gpsTypes[gpsData.type].name);
+  }
+  SERIAL_PRINT("@");
+  SERIAL_PRINTLN(gpsBaudRates[gpsData.baudrate]);
+#else
+  SERIAL_PRINTLN("GPS: Disabled");
+#endif
 }
 
 #ifdef SlowTelemetry
@@ -955,8 +981,8 @@ void reportVehicleState() {
         telemetryBuffer.data.course    = getCourse()/10; // degrees
         telemetryBuffer.data.speed     = getGpsSpeed()*36/1000;              // km/h
         telemetryBuffer.data.heading   = (short)(trueNorthHeading*RAD2DEG); // degrees
-        telemetryBuffer.data.gpsinfo   = (gpsHDOP<0xfff)?gpsHDOP:0x0fff;
-        telemetryBuffer.data.gpsinfo  |= (((unsigned short)((nbSatelitesInUse<15)?nbSatelitesInUse:15)) << 12);
+        telemetryBuffer.data.gpsinfo   = 0;
+        telemetryBuffer.data.gpsinfo  |= (((unsigned short)((gpsData.sats<15)?gpsData.sats:15)) << 12);
       #else
         telemetryBuffer.data.latitude  = 0;
         telemetryBuffer.data.longitude = 0;

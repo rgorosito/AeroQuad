@@ -33,12 +33,15 @@
 // Flight Software Version
 #define SOFTWARE_VERSION 3.1
 
-#if defined WirelessTelemetry && !defined MavLink
-  #define BAUD 111111 // use this to be compatible with USB and XBee connections
+#if defined CONFIG_BAUDRATE
+  #define BAUD CONFIG_BAUDRATE
 #else
-  #define BAUD 115200
+  #if defined WirelessTelemetry && !defined MavLink
+    #define BAUD 111111 // use this to be compatible with USB and XBee connections
+  #else
+    #define BAUD 115200
+  #endif
 #endif  
-
 
 /**
  * ESC calibration process global declaration
@@ -172,7 +175,7 @@ void reportVehicleState();
   int minThrottleAdjust = -50;
   int maxThrottleAdjust = 50;
   int altitudeHoldThrottle = 1000;
-  boolean isStoreAltitudeNeeded = false;
+  boolean isAltitudeHoldInitialized = false;
   
   
   float velocityCompFilter1 = 1.0 / (1.0 + 0.3);
@@ -202,7 +205,7 @@ void reportVehicleState();
   #define MOTOR_AUTO_DESCENT_STATE 4
   
   byte autoLandingState = OFF;
-  boolean isStoreAltitudeForAutoLanfingNeeded = false;
+  boolean isAutoLandingInitialized = false;
   int autoLandingThrottleCorrection = 0;
 #endif
 
@@ -226,11 +229,11 @@ void reportVehicleState();
     int gpsRollAxisCorrection = 0;
     int gpsPitchAxisCorrection = 0;
     int gpsYawAxisCorrection = 0;
-    boolean isStorePositionNeeded = false;
-    boolean isInitNavigationNeeded = false;
+    boolean isPositionHoldInitialized = false;
+    boolean isGpsNavigationInitialized = false;
 
     int waypointIndex = -1;    
-    float gpsDistanceToDestination = 99999999.0;
+    float distanceToDestination = 99999999.0;
     GeodeticPosition waypoint[MAX_WAYPOINTS] = {
       GPS_INVALID_POSITION, GPS_INVALID_POSITION, GPS_INVALID_POSITION, GPS_INVALID_POSITION,
       GPS_INVALID_POSITION, GPS_INVALID_POSITION, GPS_INVALID_POSITION, GPS_INVALID_POSITION,

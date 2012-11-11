@@ -48,27 +48,12 @@
   #error "Receiver SWBUS and SlowTelemetry are in conflict for Seria2, they can't be used together"
 #endif
 
-// Special motor config additionnal variable
-#if defined(quadXHT_FPVConfig)
- #define quadXConfig
- #define FRONT_YAW_CORRECTION 0.95
- #define REAR_YAW_CORRECTION 1.17
-#endif
+#if defined (CameraTXControl) && !defined (CameraControl)
+  #error "CameraTXControl need to have CameraControl defined"
+#endif 
 
-//
-// In order to use the DIYDrone libraries, this have to be declared here this way
-// @see Kenny9999 for details
-//
-#if defined(UseGPS)
-  // needed here to use DIYDrone GPS libraries
-  #include <FastSerial.h>
-  #include <AP_Common.h>
-  #include <AP_GPS.h>
-  
-  FastSerialPort0(Serial);
-  FastSerialPort1(Serial1);
-  FastSerialPort2(Serial2);
-  FastSerialPort3(Serial3);
+#if defined (OSD50HZ) && !defined (AeroQuadSTM32)
+  #error "OSD can't be updated at that speed on artduino"
 #endif
 
 
@@ -977,6 +962,8 @@
   #include <AnalogRSSIReader.h>
 #elif defined(UseEzUHFRSSIReader)
   #include <EzUHFRSSIReader.h>
+#elif defined(UseSBUSRSSIReader)
+  #include <SBUSRSSIReader.h>
 #endif
 
 
@@ -985,7 +972,12 @@
 //********************** MOTORS DECLARATION **************
 //********************************************************
 #if defined(triConfig)
-  #include <Motors_Tri.h>
+  #if defined (MOTOR_STM32)
+    #define MOTORS_STM32_TRI
+    #include <Motors_STM32.h>    
+  #else
+    #include <Motors_Tri.h>
+  #endif
 #elif defined(MOTOR_PWM)
   #include <Motors_PWM.h>
 #elif defined(MOTOR_PWM_Timer)
@@ -1041,6 +1033,9 @@
   #include <CameraStabilizer_Aeroquad.h>
 #endif
 
+#if defined (CameraTXControl)
+  #include <CameraStabilizer_TXControl.h>
+#endif
 
 //********************************************************
 //******** FLIGHT CONFIGURATION DECLARATION **************
@@ -1310,6 +1305,10 @@ void process100HzTask() {
   #ifdef SlowTelemetry
     updateSlowTelemetry100Hz();
   #endif
+
+  #if defined(UseGPS)
+    updateGps();
+  #endif      
 }
 
 /*******************************************************************
@@ -1322,7 +1321,7 @@ void process50HzTask() {
   // Reads external pilot commands and performs functions based on stick configuration
   readPilotCommands(); 
   
-  #if defined(UseAnalogRSSIReader) || defined(UseEzUHFRSSIReader)
+  #if defined(UseAnalogRSSIReader) || defined(UseEzUHFRSSIReader) || defined(UseSBUSRSSIReader)
     readRSSI();
   #endif
 
@@ -1331,7 +1330,6 @@ void process50HzTask() {
   #endif
 
   #if defined(UseGPS)
-    readGps();
     if (haveAGpsLock() && !isHomeBaseInitialized()) {
       initHomeBase();
     }
@@ -1340,6 +1338,18 @@ void process50HzTask() {
   #if defined(CameraControl)
     moveCamera(kinematicsAngle[YAXIS],kinematicsAngle[XAXIS],kinematicsAngle[ZAXIS]);
   #endif      
+  
+  #if defined CameraTXControl
+    processCameraTXControl();
+  #endif
+
+
+  #ifdef MAX7456_OSD
+    #ifdef OSD50HZ
+      updateOSD();
+    #endif
+  #endif
+    
 }
 
 /*******************************************************************
@@ -1385,7 +1395,9 @@ void process10HzTask3() {
     #endif
 
     #ifdef MAX7456_OSD
+    #ifndef OSD50HZ
       updateOSD();
+    #endif
     #endif
     
     #if defined(UseGPS) || defined(BattMonitor)
