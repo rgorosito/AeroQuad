@@ -31,7 +31,7 @@
 #include "Receiver.h"
 
 // Flight Software Version
-#define SOFTWARE_VERSION 3.1
+#define SOFTWARE_VERSION 3.2
 
 #if defined CONFIG_BAUDRATE
   #define BAUD CONFIG_BAUDRATE
@@ -294,9 +294,6 @@ typedef struct {
   float ALTITUDE_BUMP_ADR;
   float ALTITUDE_PANIC_ADR;
   // Gyro calibration
-  float GYRO_ROLL_ZERO_ADR;
-  float GYRO_PITCH_ZERO_ADR;
-  float GYRO_YAW_ZERO_ADR;
   float ROTATION_SPEED_FACTOR_ARD;
   // Accel Calibration
   float XAXIS_ACCEL_BIAS_ADR;
@@ -333,6 +330,7 @@ typedef struct {
   float SERVOMAXPITCH_ADR;
   float SERVOMAXROLL_ADR;
   float SERVOMAXYAW_ADR;
+  float SERVOTXCHANNELS_ADR;
   // GPS mission storing
   float GPS_MISSION_NB_POINT_ADR;
   GeodeticPosition WAYPOINT_ADR[MAX_WAYPOINTS];

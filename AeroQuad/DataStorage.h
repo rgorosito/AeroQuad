@@ -176,18 +176,14 @@ void initializeEEPROM() {
     altitudeHoldPanicStickMovement = 250;
   #endif
   
-  // Gyro Cal
-  gyroZero[XAXIS] = 0.0;
-  gyroZero[YAXIS] = 0.0;
-  gyroZero[ZAXIS] = 0.0;
-  
-  // Accel Cal
-  accelScaleFactor[XAXIS] = 1.0;
-  runTimeAccelBias[XAXIS] = 0.0;
-  accelScaleFactor[YAXIS] = 1.0;
-  runTimeAccelBias[YAXIS] = 0.0;
-  accelScaleFactor[ZAXIS] = 1.0;
-  runTimeAccelBias[ZAXIS] = 0.0;
+  initializePlatformSpecificAccelCalibration();
+//  // Accel Cal
+//  accelScaleFactor[XAXIS] = 1.0;
+//  runTimeAccelBias[XAXIS] = 0.0;
+//  accelScaleFactor[YAXIS] = 1.0;
+//  runTimeAccelBias[YAXIS] = 0.0;
+//  accelScaleFactor[ZAXIS] = 1.0;
+//  runTimeAccelBias[ZAXIS] = 0.0;
 
   #ifdef HeadingMagHold
     magScale[XAXIS] = 1.0;
@@ -272,6 +268,9 @@ void initializeEEPROM() {
     servoMaxPitch = 2000;
     servoMaxRoll = 2000;
     servoMaxYaw = 2000;
+    #ifdef CameraTXControl
+      servoTXChannels = 1;
+    #endif
   #endif
 }
 
@@ -371,6 +370,10 @@ void readEEPROM() {
     servoMaxPitch = readFloat(SERVOMAXPITCH_ADR);
     servoMaxRoll = readFloat(SERVOMAXROLL_ADR);
     servoMaxYaw = readFloat(SERVOMAXYAW_ADR);
+    #ifdef CameraTXControl
+      servoTXChannels = readFloat(SERVOTXCHANNELS_ADR);
+      servoActualCenter = readFloat(SERVOCENTERPITCH_ADR);
+    #endif
   #endif   
 }
 
@@ -480,15 +483,14 @@ void writeEEPROM(){
     writeFloat(servoMaxPitch, SERVOMAXPITCH_ADR);
     writeFloat(servoMaxRoll, SERVOMAXROLL_ADR);
     writeFloat(servoMaxYaw, SERVOMAXYAW_ADR);
+    #ifdef CameraTXControl
+      writeFloat(servoTXChannels, SERVOTXCHANNELS_ADR);
+    #endif
   #endif 
   sei(); // Restart interrupts
 }
 
 void initSensorsZeroFromEEPROM() {
-  // Gyro initialization from EEPROM
-  gyroZero[XAXIS] = readFloat(GYRO_ROLL_ZERO_ADR);
-  gyroZero[YAXIS] = readFloat(GYRO_PITCH_ZERO_ADR);
-  gyroZero[ZAXIS] = readFloat(GYRO_YAW_ZERO_ADR);
 
   // Accel initialization from EEPROM
   accelOneG = readFloat(ACCEL_1G_ADR);
@@ -502,10 +504,6 @@ void initSensorsZeroFromEEPROM() {
 }
 
 void storeSensorsZeroToEEPROM() {
-  // Store gyro data to EEPROM
-  writeFloat(gyroZero[XAXIS], GYRO_ROLL_ZERO_ADR);
-  writeFloat(gyroZero[YAXIS], GYRO_PITCH_ZERO_ADR);
-  writeFloat(gyroZero[ZAXIS], GYRO_YAW_ZERO_ADR);
   
   // Store accel data to EEPROM
   writeFloat(accelOneG, ACCEL_1G_ADR);
