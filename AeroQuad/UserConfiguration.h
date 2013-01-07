@@ -40,14 +40,14 @@
 // Mega processor
 //#define AeroQuadMega_v1     // Arduino Mega with AeroQuad Shield v1.7 and below
 //#define AeroQuadMega_v2     // Arduino Mega with AeroQuad Shield v2.0
-#define AeroQuadMega_v21	// Arduino Mega with AeroQuad Shield v2.1
+//#define AeroQuadMega_v21    // Arduino Mega with AeroQuad Shield v2.1
 //#define AeroQuadMega_Wii    // Arduino Mega with Wii Sensors and AeroQuad Shield v2.x
 //#define ArduCopter          // ArduPilot Mega (APM) with Oilpan Sensor Board
 //#define AeroQuadMega_CHR6DM // Clean Arduino Mega with CHR6DM as IMU/heading ref.
 //#define APM_OP_CHR6DM       // ArduPilot Mega with CHR6DM as IMU/heading ref., Oilpan for barometer (just uncomment AltitudeHoldBaro for baro), and voltage divider
 
 // STM32 processor
-//#define AeroQuadSTM32        // Baloo board
+#define AeroQuadSTM32        // Baloo board
 
 
 /****************************************************************************
@@ -71,7 +71,7 @@
 // MOTOR ADVANCE CONFIG SECTION
 //#define CHANGE_YAW_DIRECTION	// only needed if you want to reverse the yaw correction direction
 
-#define USE_400HZ_ESC			// For ESC that support 400Hz update rate, ESC OR PLATFORM MAY NOT SUPPORT IT
+//#define USE_400HZ_ESC			// For ESC that support 400Hz update rate, ESC OR PLATFORM MAY NOT SUPPORT IT
 
 
 //
@@ -103,6 +103,12 @@
 
 // Device specific settings
 //#define UseGPSMTKBINARY   // Set MTK devices to binary protocol (only DiyDrones MTK1.6 protocol supported)
+
+#define UseGPSNavigator   // EXPERIMENTAL - NEEDS UseGPS TO BE DEFINED. Enables GPS Position Hold, way-point following or - if no way-points are present - auto return to home position
+
+#define UseGPS_NMEA   // force the use of NMEA GPS
+//#define UseGPS_MTK  // force the use of MTK GPS
+#define UseGPSNavigator		// EXPERIMENTAL NEEDS UseGPS TO BE DEFINED, enables GPS Position Hold, auto return to home if no mission or execute mission
 
 //
 // *******************************************************************************************************************************
@@ -214,3 +220,4 @@
  ****************************************************************************
  ****************************************************************************
  ****************************************************************************/
+
