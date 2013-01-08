@@ -49,6 +49,11 @@
 	#define A5       Port2Pin('C',2)
 	#define A6       Port2Pin('C',3)
 
+	#define PLED1       Port2Pin('D',7)
+	#define PLED2       Port2Pin('E',0)
+	#define PLED3       Port2Pin('E',1)
+	#define PLED4       Port2Pin('D',4)
+
 
 	#include <Device_I2C.h>
 
