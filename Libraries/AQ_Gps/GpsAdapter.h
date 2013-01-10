@@ -35,22 +35,22 @@ struct gpsData gpsData; // This is accessed by the parser functions directly !
 #endif
 
 // default to all protocols
-#if (!defined(UseGPSUBLOX) && !defined(UseGPSNMEA) && !defined(UseGPSMTK16))
-  #define UseGPSUBLOX
-  #define UseGPSNMEA
-  #define UseGPSMTK16
+#if (!defined(UseGPS_UBLOX) && !defined(UseGPS_NMEA) && !defined(UseGPS_MTK16))
+  #define UseGPS_UBLOX
+  #define UseGPS_NMEA
+  #define UseGPS_MTK16
 #endif
 
 
-#ifdef UseGPSUBLOX
+#ifdef UseGPS_UBLOX
 #include <ublox.h>
 #endif
 
-#ifdef UseGPSNMEA
+#ifdef UseGPS_NMEA
 #include <nmea.h>
 #endif
 
-#ifdef UseGPSMTK16
+#ifdef UseGPS_MTK16
 #include <mtk16.h>
 #endif
 
@@ -74,13 +74,13 @@ byte  gpsConfigTimer;  // 0 = no more work, 1 = send now, >1 wait
 
 const unsigned long gpsBaudRates[] = { 9600L, 19200L, 38400L, 57600L, 115200L};
 const struct gpsType gpsTypes[] = {
-#ifdef UseGPSUBLOX
+#ifdef UseGPS_UBLOX
   { "UBlox", ubloxInit, ubloxProcessData },
 #endif
-#ifdef UseGPSNMEA
+#ifdef UseGPS_NMEA
   { "NMEA", nmeaInit, nmeaProcessData },
 #endif
-#ifdef UseGPSMTK16
+#ifdef UseGPS_MTK16
   { "MTK16", mtk16Init, mtk16ProcessData },
 #endif
 };
@@ -108,10 +108,10 @@ void initializeGpsData() {
 }
 
 struct gpsConfigEntry gpsConfigEntries[] = {
-#ifdef UseGPSMTK16
+#ifdef UseGPS_MTK16
   MTK_CONFIGS,
 #endif
-#ifdef UseGPSUBLOX
+#ifdef UseGPS_UBLOX
   UBLOX_CONFIGS,
 #endif
   { NULL, 0 }
