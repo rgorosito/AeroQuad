@@ -90,9 +90,9 @@ void processSafety()
 	byte dist_action=SAFETY_ACTION_NOTHING;
 	byte new_action=SAFETY_ACTION_NOTHING;
 
-    if ( rssiRawValue > RSSI_CRIT ) {
+    if ( rssiRawValue < RSSI_CRIT ) {
 	new_rssi_status=CRITICAL;
-    } else if ( rssiRawValue > RSSI_WARN ) {
+    } else if ( rssiRawValue < RSSI_WARN ) {
 	new_rssi_status=WARNING;
     } else {
         new_rssi_status=OK;
