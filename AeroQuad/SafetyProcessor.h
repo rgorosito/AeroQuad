@@ -131,8 +131,6 @@ void processSafety()
     }
 
 
- // y al finaal
-  safety_action = new_action;
 
 
  // y al más final, hacer las cosas:
@@ -140,7 +138,10 @@ void processSafety()
 
 if ( safety_action != new_action  ) {
 
+  // seteo la nueva accion
+  safety_action = new_action;
 
+ // realiza la nueva accion
  switch (safety_action) {
 
 	case SAFETY_ACTION_NOTHING:
