@@ -136,10 +136,18 @@ void processSafety()
 
 
  // y al más final, hacer las cosas:
+ 
+
+if ( safety_action != new_action  ) {
 
 
  switch (safety_action) {
 
+	case SAFETY_ACTION_NOTHING:
+		#ifdef OSD
+			notifyOSD(OSD_CENTER|OSD_WARN, "SAFE TO FLY!");
+		#endif
+		break;
 	case SAFETY_ACTION_SHUTDOWN:
 		commandAllMotors(MINCOMMAND);
 		motorArmed = OFF;
@@ -153,6 +161,8 @@ void processSafety()
 		#ifdef OSD
 			notifyOSD(OSD_CENTER|OSD_CRIT, "SAFETY: UNKNOW ACTION %d!", safety_action);
 		#endif
+}
+
 }
 
 /* PARA NO USAR MILISS:
