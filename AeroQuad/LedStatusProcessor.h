@@ -64,9 +64,22 @@ void processLedStatus() {
   //
   if (flightMode == ATTITUDE_FLIGHT_MODE) {
     digitalWrite(LED_Yellow, HIGH);
+  #if defined (AeroQuadSTM32)
+    digitalWrite(PLED1,HIGH);
+    digitalWrite(PLED2,HIGH);
+    digitalWrite(PLED3,HIGH);
+    digitalWrite(PLED4,HIGH);
+  #endif
   }
   else {
     digitalWrite(LED_Yellow, LOW);
+  #if defined (AeroQuadSTM32)
+    digitalWrite(PLED1,LOW);
+    digitalWrite(PLED2,LOW);
+    digitalWrite(PLED3,LOW);
+    digitalWrite(PLED4,LOW);
+  #endif
+
   }
 
   flashingLedState++;
