@@ -21,12 +21,12 @@
 #ifndef _AQ_ANALOG_RSSI_READER_H_
 #define _AQ_ANALOG_RSSI_READER_H_
 
-
-#define RSSI_PIN     A6     // analog pin to read
+// RSSI CONFIG un UserConfiguration.h
+//#define RSSI_PIN     A6     // analog pin to read
 //#define RSSI_RAWVAL         // show raw A/D value instead of percents (for tuning)
-#define RSSI_100P    800   // A/D value for 100%
-#define RSSI_0P      80      // A/D value for 0%
-#define RSSI_WARN    20     // show alarm at %
+//#define RSSI_100P    800   // A/D value for 100%
+//#define RSSI_0P      80      // A/D value for 0%
+//#define RSSI_WARN    20     // show alarm at %
 
 
 //////////////////////////////////////////////////////////////////////////////
