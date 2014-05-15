@@ -191,7 +191,7 @@
 // *************************************************************.******************************************************************
 #define OSD
 #define ShowRSSI                  // This REQUIRES a RSSI reader
-//#define PAL                       // uncomment this to default to PAL video
+#define PAL                       // uncomment this to default to PAL video
 //#define AUTODETECT_VIDEO_STANDARD // detect automatically, signal must be present at Arduino powerup!
 //#define CALLSIGN "KF7YRK"         // Show (optional) callsign
 #define ShowAttitudeIndicator     // Display the attitude indicator calculated by the AHRS
