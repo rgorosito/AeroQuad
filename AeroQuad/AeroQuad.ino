@@ -1156,7 +1156,7 @@
  #include <BarometricSensor_MS5611.h>
 #endif
 #if defined(XLMAXSONAR)
-  #include <MaxSonarRangeFinder.h>
+  #include <HCSR04_STM32.h>
 #endif 
 //********************************************************
 //*************** BATTERY MONITOR DECLARATION ************
