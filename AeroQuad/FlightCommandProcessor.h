@@ -76,7 +76,7 @@
   void processAutoLandingStateFromReceiverCommand() {
     if (receiverCommand[AUX3] < 1750) {
       if (altitudeHoldState != ALTPANIC ) {  // check for special condition with manditory override of Altitude hold
-        if (isAutoLandingInitialized) {
+        if (!isAutoLandingInitialized) {
           autoLandingState = BARO_AUTO_DESCENT_STATE;
           #if defined AltitudeHoldBaro
             baroAltitudeToHoldTarget = getBaroAltitude();
