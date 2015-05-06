@@ -31,6 +31,7 @@
 byte osdGPSState=0;
 #define GPS_DONAV 0x80 // display navigation info next time
 #define GPS_NONAV 0x40 // nav info hidden (no fix or no target)
+long osdLastGpsAltitude=GPS_INVALID_ALTITUDE-1; // force first run
 
 void displayGPS(struct GeodeticPosition pos, struct GeodeticPosition home, long speed, long course, float magheadingrad, unsigned int numsats) {
 
@@ -101,6 +102,20 @@ void displayGPS(struct GeodeticPosition pos, struct GeodeticPosition home, long 
       writeChars(buf, 28, 0, GPS_ROW, GPS_COL);
     } else {
       char buf[29];
+      if ( gpsData.height != osdLastGpsAltitude ) {
+        osdLastGpsAltitude= (long)(gpsData.height);
+        if ( osdLastGpsAltitude == GPS_INVALID_ALTITUDE ) {
+	  snprintf(buf,29,"......");
+	} else {
+	  snprintf(buf,29,"%5ldm",osdLastGpsAltitude);
+        }
+	buf[6]=gpsData.state+0x30;
+	buf[7]='\0';
+       
+      }
+      writeChars(buf, 28, 0, SIGNAL_QUALITY_ROW, SIGNAL_QUALITY_COL); // FIXME: usar una constante especifica de esta coordenada y revisar
+
+
 #ifdef USUnits
       speed=speed*36/1609; // convert from cm/s to mph 
       snprintf(buf,29,"%d:%c%02ld.%06ld%c%03ld.%06ld%3ld\031",numsats,
