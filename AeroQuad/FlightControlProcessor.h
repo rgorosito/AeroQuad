@@ -204,7 +204,7 @@ void processThrottleCorrection() {
   #endif
   #if defined (AutoLanding)
     #if defined BattMonitorAutoDescent
-      if (batteryMonitorAlarmCounter < BATTERY_MONITOR_MAX_ALARM_COUNT) { // don't auto land in the same time that the battery monitor do auto descent, or Override the auto descent to land, TBD
+      if (batteryMonitorAlarmCounter >= BATTERY_MONITOR_MAX_ALARM_COUNT) { // don't auto land in the same time that the battery monitor do auto descent, or Override the auto descent to land, TBD
         throttleAdjust += autoLandingThrottleCorrection;
       }
     #else
