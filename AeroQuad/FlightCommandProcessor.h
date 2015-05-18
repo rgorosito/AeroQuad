@@ -24,28 +24,30 @@
 #ifndef _AQ_FLIGHT_COMMAND_READER_
 #define _AQ_FLIGHT_COMMAND_READER_
 
-
+boolean lastPositionHoldEnabledByUser=false;
+boolean lastAutoLandingEnabledByUser=false;
 
 
 #if defined (AltitudeHoldBaro) || defined (AltitudeHoldRangeFinder)
+
   boolean isPositionHoldEnabledByUser() {
     #if defined (UseGPSNavigator)
-      if ((receiverCommand[AUX1] < 1750) || (receiverCommand[AUX2] < 1750)) {
-        return true;
-      }
-      return false;
+      return ((receiverCommand[AUX1] < 1750) || (receiverCommand[AUX2] < 1750));
     #else
-      if (receiverCommand[AUX1] < 1750) {
-        return true;
-      }
-      return false;
+      return (receiverCommand[AUX1] < 1750);
     #endif
   }
-#endif
 
-#if defined AltitudeHoldBaro || defined AltitudeHoldRangeFinder
+  boolean lastAltitudeHoldEnabledByUser=!isPositionHoldEnabledByUser();	// force first run
+
   void processAltitudeHoldStateFromReceiverCommand() {
-    if (isPositionHoldEnabledByUser()) {
+    boolean newAltitudeHoldEnabledByUser = isPositionHoldEnabledByUser();
+    if ( newAltitudeHoldEnabledByUser == lastAltitudeHoldEnabledByUser ) {
+      return;
+    }
+    lastAltitudeHoldEnabledByUser=newAltitudeHoldEnabledByUser;
+
+    if (newAltitudeHoldEnabledByUser) {
       if (altitudeHoldState != ALTPANIC ) {  // check for special condition with manditory override of Altitude hold
         if (!isAltitudeHoldInitialized) {
           #if defined AltitudeHoldBaro
@@ -73,9 +75,19 @@
 
 
 #if defined (AutoLanding)
+  boolean isAutoLandingEnabledByUser() {
+    return (receiverCommand[AUX3] < 1750);
+  }
+
   void processAutoLandingStateFromReceiverCommand() {
-    if (receiverCommand[AUX3] < 1750) {
-      if (altitudeHoldState != ALTPANIC ) {  // check for special condition with manditory override of Altitude hold
+    boolean newAutoLandingEnabledByUser=isAutoLandingEnabledByUser();
+    if ( newAutoLandingEnabledByUser == lastAutoLandingEnabledByUser ) {
+      return;
+    }
+    lastAutoLandingEnabledByUser = newAutoLandingEnabledByUser;
+
+    if ( newAutoLandingEnabledByUser ) {
+      if ( altitudeHoldState != ALTPANIC ) {  // check for special condition with manditory override of Altitude hold
         if (!isAutoLandingInitialized) {
           autoLandingState = BARO_AUTO_DESCENT_STATE;
           #if defined AltitudeHoldBaro
@@ -98,17 +110,13 @@
       autoLandingState = OFF;
       autoLandingThrottleCorrection = 0;
       isAutoLandingInitialized = false;
-      #if defined (UseGPSNavigator)
-        if ((receiverCommand[AUX1] > 1750) && (receiverCommand[AUX2] > 1750)) {
-          altitudeHoldState = OFF;
-          isAltitudeHoldInitialized = false;
-        }
-      #else
-        if (receiverCommand[AUX1] > 1750) {
-          altitudeHoldState = OFF;
-          isAltitudeHoldInitialized = false;
-        }
-      #endif
+      if ( isPositionHoldEnabledByUser() ) {
+        altitudeHoldState = OFF;
+        isAltitudeHoldInitialized = false;
+      } else {
+        altitudeHoldState = OFF;
+        isAltitudeHoldInitialized = false;
+      }
     }
   }
 #endif
